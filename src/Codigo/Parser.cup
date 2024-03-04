@@ -1,9 +1,6 @@
 // ------------  Paquete e importaciones ------------
 package Codigo;
-
-import java_cup.runtime.*;
-
-
+import java_cup.runtime.Symbol;
 //------> Codigo para el parser
 //------> Declaracion de variables, funciones y funciones de error
 
@@ -30,25 +27,150 @@ action code
 
 
 //------> Declaración de terminales
-terminal String ENTERO, SUMAR;
-
+terminal   PROGRAM, END, PYC, PARIZ, PARDE, COMA, OPERACION, TIPO, VAR, DOSP, ID, MENOR, GUION;
+terminal String ENTERO, DECIMAL;
 //------> Declaración de no terminales
-non terminal inicio;
-non terminal op;
+non terminal arbol S;
+
+non terminal arbol COD;
+non terminal arbol DEC;
+non terminal arbol FUNC;
+non terminal arbol OPARIT;
+non terminal arbol VALOR;
+non terminal arbol LC, E;
 
 
 //------> Definir Simbolo Inicial
-start with inicio; 
+start with S; 
 
 
 // ------------>  Producciones  <------------
 
-inicio ::= SUMAR PARIZ ENTERO:num1 COMA ENTERO:num2 PARDER{:
-RESULT = num1 + num2;
+
+S ::= PROGRAM:prog1 LC:lc1 END:fin PROGRAM:prog2 PYC:pcoma {:
+arbol inicio = new arbol("S");
+inicio.addHijo(new arbol(prog1.toString()));
+inicio.addHijo(lc1);
+inicio.addHijo(new arbol(fin.toString()));
+inicio.addHijo(new arbol(prog2.toString()));
+inicio.addHijo(new arbol(pcoma.toString()));
+RESULT = inicio; 
+:}
+;
+
+LC ::= LC:lc1 COD:codigo1
+{:
+arbol lc = new arbol("LC");
+lc.addHijo(lc1);
+lc.addHijo(codigo1);
+RESULT = lc;
+:}
+           | COD:codigo2 {:
+arbol lc = new arbol("LC");
+lc.addHijo(codigo2);
+RESULT = lc;
+:}
+| DEC:dec {:
+arbol lc = new arbol("LC");
+lc.addHijo(dec);
+RESULT = lc;
+:}
+;
+
+COD ::= FUNC
+           | OPARIT:op {:
+arbol cod = new arbol("COD");
+cod.addHijo(op);
+RESULT = cod;
+:}
+| E:val {:
+arbol cod = new arbol("COD");
+cod.addHijo(val);
+RESULT = cod;
+:}
+;
+
+OPARIT ::=  OPERACION:operacion PARIZ:parentesis1 VALOR:num1 COMA:c VALOR:num2 PARDE:parentesis2 {:
+arbol oparit = new arbol("OPARIT");
+oparit.addHijo(new arbol(operacion.toString()));
+oparit.addHijo(new arbol(parentesis1.toString()));
+oparit.addHijo(num1);
+oparit.addHijo(new arbol(c.toString()));
+oparit.addHijo(num2);
+oparit.addHijo(new arbol(parentesis2.toString()));
+RESULT = oparit;
 :}
 ;
 
 
+VALOR ::= E:e {:
+arbol val = new arbol("VALOR");
+val.addHijo(e);
+RESULT = val;
+:}
+| OPARIT:op
+{:
+arbol oper = new arbol("VALOR OP");
+oper.addHijo(op);
+RESULT = oper;
+:}
+;
 
+DEC ::= LC:lc VAR:var DOSP:dosp1  TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion COD:cod END:end PYC:pyc {:
+arbol declarar = new arbol("DEC");
+declarar.addHijo(lc);
+declarar.addHijo(new arbol(var.toString()));
+declarar.addHijo(new arbol(dosp1.toString()));
+
+declarar.addHijo(new arbol(tipo.toString()));
+
+declarar.addHijo(new arbol(dosp3.toString()));
+declarar.addHijo(new arbol(dosp4.toString()));
+
+declarar.addHijo(new arbol(id.toString()));
+declarar.addHijo(new arbol(menor.toString()));
+declarar.addHijo(new arbol(guion.toString()));
+declarar.addHijo(cod);
+declarar.addHijo(new arbol(end.toString()));
+declarar.addHijo(new arbol(pyc.toString()));
+RESULT = declarar;
+:}
+|VAR:var DOSP:dosp1 TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion COD:cod END:end PYC:pyc {:
+arbol declarar = new arbol("DEC");
+declarar.addHijo(new arbol(var.toString()));
+declarar.addHijo(new arbol(dosp1.toString()));
+
+declarar.addHijo(new arbol(tipo.toString()));
+
+declarar.addHijo(new arbol(dosp3.toString()));
+declarar.addHijo(new arbol(dosp4.toString()));
+
+declarar.addHijo(new arbol(id.toString()));
+declarar.addHijo(new arbol(menor.toString()));
+declarar.addHijo(new arbol(guion.toString()));
+declarar.addHijo(cod);
+declarar.addHijo(new arbol(end.toString()));
+declarar.addHijo(new arbol(pyc.toString()));
+RESULT = declarar;
+:}
+;
+
+E ::=  ENTERO:ent {:
+arbol val = new arbol("E");
+val.addHijo(new arbol(ent));
+RESULT = val;
+:}
+               | DECIMAL:dec {:
+arbol val = new arbol("E");
+val.addHijo(new arbol(dec));
+
+RESULT = val;
+:}
+| ID:id {:
+arbol val = new arbol("E");
+val.addHijo(new arbol(id.toString()));
+RESULT = val;
+:}
+;
 
 
