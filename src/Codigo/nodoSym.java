@@ -9,14 +9,14 @@ package Codigo;
  * @author Javier Avila
  */
 public class nodoSym {
-   private String nombre;
+       private String nombre;
    private String rol;
    private String tipo;
    private String entorno;
    private String pertenece_a;
-   private String valor;
+   private Object valor;
 
-    public nodoSym(String nombre, String rol, String tipo, String entorno, String pertenece_a, String valor) {
+    public nodoSym(String nombre, String rol, String tipo, String entorno, String pertenece_a, Object valor) {
         this.nombre = nombre;
         this.rol = rol;
         this.tipo = tipo;
@@ -65,12 +65,15 @@ public class nodoSym {
         this.pertenece_a = pertenece_a;
     }
 
-    public String getValor() {
+    public Object getValor() {
         return valor;
     }
 
     public void setValor(String valor) {
         this.valor = valor;
     }
+
    
+    
+
 }
