@@ -10,11 +10,15 @@ parser code
 
     public void syntax_error(Symbol s)
     {
+            error e = new error(String.valueOf(s.value), "Sintactico", String.valueOf(s.right), String.valueOf(s.left));
+            Listas.setListaErrores(e);
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
     {
+            error e = new error(String.valueOf(s.value), "Sintactico", String.valueOf(s.right), String.valueOf(s.left));
+            Listas.setListaErrores(e);
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Sin recuperacion." );
     }
 
@@ -28,7 +32,7 @@ action code
 
 //------> Declaración de terminales
 terminal   PROGRAM, END, PYC, PARIZ, PARDE, COMA, OPERACION, TIPO, VAR, DOSP, ID, MENOR, GUION, ARROBA, ARR, LLIZ, LLDER, ESTADISTICO,
- CONSOLE, PRINT, IGUAL;
+ CONSOLE, PRINT, IGUAL, COLUMN, MAYOR;
 terminal String ENTERO, DECIMAL, CADENA;
 //------> Declaración de no terminales
 non terminal arbol S;
@@ -38,7 +42,7 @@ non terminal arbol DEC;
 non terminal arbol FUNC;
 non terminal arbol OPARIT;
 non terminal arbol VALOR;
-non terminal arbol LC, E, LVAL, DARR, LIST, IMP;
+non terminal arbol LC, E, LVAL, DARR, LIST, IMP, IMPC, TCOLUMN, err;
 
 
 //------> Definir Simbolo Inicial
@@ -103,8 +107,21 @@ arbol cod = new arbol("COD");
 cod.addHijo(imp);
 RESULT = cod;
 :}
+|IMPC:impc{:
+arbol cod = new arbol("COD");
+cod.addHijo(impc);
+RESULT = cod;
+:}
+| error err{:
+RESULT = new arbol(";");
+:}
 ;
 
+err ::= VAR
+| ARR
+|CONSOLE
+|PYC
+;
 OPARIT ::=  OPERACION:operacion PARIZ:parentesis1 VALOR:num1 COMA:c VALOR:num2 PARDE:parentesis2 {:
 arbol oparit = new arbol("OPARIT");
 oparit.addHijo(new arbol(operacion.toString()));
@@ -142,7 +159,7 @@ arbol declarar = new arbol("DEC");
 declarar.addHijo(lc);
 declarar.addHijo(new arbol(var.toString()));
 declarar.addHijo(new arbol(dosp1.toString()));
-
+System.out.println("MIRAA"+id);
 declarar.addHijo(new arbol(tipo.toString()));
 
 declarar.addHijo(new arbol(dosp3.toString()));
@@ -173,7 +190,8 @@ declarar.addHijo(cod);
 declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
 RESULT = declarar;
-:}
+:} 
+
 ;
 
 
@@ -182,7 +200,7 @@ arbol declarar = new arbol("DARR");
 declarar.addHijo(lc);
 declarar.addHijo(new arbol(arr.toString()));
 declarar.addHijo(new arbol(dosp1.toString()));
-
+System.out.println("ESTEEEE"+id);
 declarar.addHijo(new arbol(tipo.toString()));
 
 declarar.addHijo(new arbol(dosp3.toString()));
@@ -219,6 +237,7 @@ declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
 RESULT = declarar;
 :}
+
 ;
 
 
@@ -236,6 +255,33 @@ RESULT = imp;
 :}
 ;
 
+IMPC ::= CONSOLE:cons DOSP:dosp DOSP COLUMN:colum IGUAL:igual TCOLUMN:tcolumn GUION:guion MAYOR:may LIST:list END:end PYC:pyc {:
+arbol val = new arbol("IMPC");
+val.addHijo(new arbol(cons.toString()));
+val.addHijo(new arbol(dosp.toString()));
+val.addHijo(new arbol(dosp.toString()));
+val.addHijo(new arbol(colum.toString()));
+val.addHijo(new arbol(igual.toString()));
+val.addHijo(tcolumn);
+val.addHijo(new arbol(guion.toString()));
+val.addHijo(new arbol(may.toString()));
+val.addHijo(list);
+val.addHijo(new arbol(end.toString()));
+val.addHijo(new arbol(pyc.toString()));
+RESULT = val; :}
+;
+
+TCOLUMN ::= ID:id {:
+arbol val = new arbol("TCOLUMN");
+val.addHijo(new arbol(id.toString()));
+RESULT = val;
+:}
+| CADENA:cad{:
+arbol val = new arbol("TCOLUMN");
+val.addHijo(new arbol(cad));
+RESULT = val;
+:}
+;
 
 LVAL ::= LVAL:lval COMA:coma VALOR:valor{:
 arbol lval1 = new arbol("LVAL");
@@ -273,6 +319,7 @@ list.addHijo(new arbol(arroba.toString()));
 list.addHijo(new arbol(id.toString()));
 RESULT = list;
 :}
+
 ;
 E ::=  ENTERO:ent {:
 arbol val = new arbol("E");
@@ -295,6 +342,7 @@ arbol val = new arbol("E");
 val.addHijo(new arbol(cad));
 RESULT = val;
 :}
+
 ;
 
 

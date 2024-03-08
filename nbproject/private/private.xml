@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/Codigo/Parser.cup</url>
+            <bookmark id="1">
+                <name/>
+                <line>188</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/Parser.java</file>
@@ -8,6 +17,7 @@
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/Lexer.java</file>
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/nodoSym.java</file>
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/test/maintest.java</file>
+            <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/Listas.java</file>
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/Parser.cup</file>
             <file>file:/C:/Users/Javier%20Avila/Documents/NetBeansProjects/JavaApplication1/src/Codigo/arbol.java</file>
         </group>

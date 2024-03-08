@@ -5,6 +5,7 @@
 package test;
 
 import Codigo.Lexer;
+import Codigo.Listas;
 import Codigo.Parser;
 import Codigo.arbol;
 import Codigo.nodoSym;
@@ -33,10 +34,17 @@ public class maintest {
                     String entrada = ""
                             + "PROGRAM"
                             +" "
+                            +"console :: print = \"hola\" end;"
+                            +" "
+                            +"console :: print = \"hola\" end;"
+                            +" "
+                            +"<! Estadísticas de Ingeniería en Guatemala \n hola !>\n"
                             + " "
                             + "var : double :: b <- sum(1,2) end;"
-                            + " <!holaaa      !>\n "
+                            + " <!holaaa   jaja   !>\n "
                             +"var : char[] :: c <- \"hola\" end;"
+                            +" "
+                            + "var : char[] :: k  <- \"hola\" end;"
                             +" "
                             +"arr : double :: @array <- [1, 3, sum(2,1)] end;"
                             +" "
@@ -47,9 +55,27 @@ public class maintest {
                             +" "
                             +" var: double :: v <- varianza([1, 2, b,3]) end;"
                             +" "
+                              +" "
+                            + "var : char[] :: o  <- \"hola\" end;"
+                            +" "
+                            + "var : char[] :: p  <- \"hola\" end;"
+                            +" "
+                            +" console :: print = p end; "
+                            +""
+                             +"console :: print = 2,3,4,1,sum(2,1), moda([1,2,2]), b,\"hola\" end;"
+                            +" "
                             +" var: double :: med <- DIV( SUM(Max(@array), Min(@array) ), 2) end;"
                             +" "
                             +"console :: print = 2,3,4,1,sum(2,1), moda([1,2,2]), b,\"hola\" end;"
+                            +" "
+                            +"console :: print = 2,3,4,1,sum(2,1), moda([1,2,2]), b,\"hola\" end;"
+                            +" "
+                            +"console :: print = \"hola\" end;"
+                            +" "
+                            +"console :: column = \"prueba\" -> [2,3,4,1,sum(2,1), moda([1,2,2]), b,\"hola\"] end;"
+                            +" "
+                            +"  "
+                            +"console :: column = \"prueba\" -> @array2 end;"
                             +" "
                             + "END PROGRAM;";
                     
@@ -57,13 +83,16 @@ public class maintest {
                     Lexer lex = new Lexer(new StringReader(entrada));
                     Parser sintax = new Parser(lex);
                     arbol raiz = (arbol) sintax.parse().value;
-                
+                    raiz.consola = "";
                     raiz.run(raiz, TS);
+                    System.out.println("TABLA ---------");
                     for(nodoSym n : TS){
                         System.out.println(n.getNombre()+ " valor: "+ n.getValor());
                     }
                     System.out.println("------EJECUCION------");
-                    System.out.println(raiz.result);
+                    System.out.println(raiz.consola);
+                    
+                    Listas.generarTablaHTMLErrores();
                 } catch (Exception ex){
             Logger.getLogger(maintest.class.getName()).log(Level.SEVERE, null, ex);
             }

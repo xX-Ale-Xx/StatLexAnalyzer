@@ -17,7 +17,7 @@ public class arbol {
     public String lex;
     public ArrayList<arbol> hijos;
     public Object result;
-
+    public static String consola = "";
     public arbol(String lex) {
         this.lex = lex;
         this.hijos = new ArrayList();
@@ -34,8 +34,14 @@ public class arbol {
     }
     
     public Object getValor(ArrayList<nodoSym> TS, String nombre){
+        System.out.println("Valor encontradoooooo: "+ nombre);
+        System.out.println(TS);
+        for(nodoSym a :TS){
+            System.out.println("ESTOO"+a.getValor());
+        }
         for(nodoSym num: TS){
             if(num.getNombre().equals(nombre)){
+                
                 return num.getValor(); 
             }
   
@@ -45,14 +51,18 @@ public class arbol {
     
         public void run(arbol raiz, ArrayList<nodoSym> TS){
         for(arbol hijo : raiz.hijos){
-            run(hijo, TS);
+            
+
+                    run(hijo, TS);
         }
         if(raiz.lex.equals("DEC") &&  raiz.hijos.size() == 11){
-           
+            System.out.println("ID:");
+            System.out.println(raiz.hijos.get(5).lex+ "Variable "+   raiz.hijos.get(2).lex+ "Local"+ " "+ String.valueOf(raiz.hijos.get(8).result));
             nodoSym sym = new nodoSym(raiz.hijos.get(5).lex, "Variable",  raiz.hijos.get(2).lex, "Local", "", String.valueOf(raiz.hijos.get(8).result));
             TS.add(sym);
         }else if(raiz.lex.equals("DEC") &&  raiz.hijos.size() == 12){
-            
+            System.out.println("ID:");
+            System.out.println(raiz.hijos.get(6).lex+ "Variable "+   raiz.hijos.get(3).lex+ "Local"+ " "+ String.valueOf(raiz.hijos.get(9).result));
             nodoSym sym = new nodoSym(raiz.hijos.get(6).lex, "Variable",  raiz.hijos.get(3).lex, "Local", "", String.valueOf(raiz.hijos.get(9).result));
             TS.add(sym);
         }
@@ -69,7 +79,7 @@ public class arbol {
         else if(raiz.lex.equals("LVAL") &&  raiz.hijos.size() == 1){
             ArrayList<Object> list = new ArrayList();
             list.add(raiz.hijos.get(0).result);
-             
+             System.out.println("lista 1 hijos"+ list);
             raiz.result = list;
         }
          else if(raiz.lex.equals("LVAL") &&  raiz.hijos.size() == 3){
@@ -77,6 +87,7 @@ public class arbol {
             list = (ArrayList<Object>) raiz.hijos.get(0).result;
             
             list.add(raiz.hijos.get(2).result);
+            System.out.println("lista 3 hijos"+ list);
             raiz.result = list;
         }else if(raiz.lex.equals("LIST") &&  raiz.hijos.size() == 1){
             raiz.result = raiz.hijos.get(0).result;
@@ -95,6 +106,7 @@ public class arbol {
         }
         else if (raiz.lex.equals("OPARIT")  &&  raiz.hijos.size() == 6){
             //operaciones aritmeticas
+            try{
             Double val1 = (Double) raiz.hijos.get(2).result;
             Double val2 = (Double)raiz.hijos.get(4).result;
             Double res;
@@ -114,8 +126,15 @@ public class arbol {
                 res =  val1 %  val2;
                 raiz.result = res;
             }
+            }catch (Exception e){
+                System.out.println("Error no es un entero");
+                System.out.println(raiz.hijos.get(2).result);
+                System.out.println(raiz.hijos.get(4).result);
+                System.out.println("-------------------------");
+            }
          
         }else if(raiz.lex.equals("E") &&  raiz.hijos.size() == 1){
+            System.out.println("valor: "+ raiz.hijos.get(0).lex+"-----");
             try{
             Double res = Double.parseDouble(raiz.hijos.get(0).lex);
             raiz.result = res;
@@ -138,28 +157,71 @@ public class arbol {
                 raiz.result = hacerFuncion((ArrayList<Object>)raiz.hijos.get(2).result, raiz.hijos.get(0).lex);
             }else{
                 
+                if(!this.getValor(TS, raiz.hijos.get(2).result.toString()).equals("Semantic Error")){
+                    System.out.println("---------"+raiz.hijos.get(2).result.toString());
                 ArrayList<Object> val = (ArrayList<Object>) this.getValor(TS, raiz.hijos.get(2).result.toString());
                 raiz.result = hacerFuncion(val, raiz.hijos.get(0).lex);
+                }else{
+                    raiz.result = 0;
+                }
             }
                
             }
         else if(raiz.lex.equals("COD") &&  raiz.hijos.size() == 1){
             raiz.result = raiz.hijos.get(0).result;
         }else if(raiz.lex.equals("IMP") ){
+           
+            consola += armarPrint((ArrayList<Object>)raiz.hijos.get(5).result);
+        }else if(raiz.lex.equals("IMPC") ){
+            try{
+            if(raiz.hijos.get(8).result instanceof ArrayList){
+                consola += armarColumn((ArrayList<Object>)raiz.hijos.get(8).result, raiz.hijos.get(5).result.toString());
+            }
+            else{
+                try{
+                ArrayList<Object> val = (ArrayList<Object>) this.getValor(TS, raiz.hijos.get(8).result.toString());
+                consola += armarColumn(val, raiz.hijos.get(5).result.toString());
+                }catch(Exception e){
+                    System.out.println("Array no encontrado");
+                }
+           
+}
+             }catch(Exception e){
+                    System.out.println("valor nulo");
+                    }
+        }
+        else if(raiz.lex.equals("TCOLUMN") ){
+            if(raiz.hijos.get(0).lex.startsWith("\"")){
+                raiz.result = raiz.hijos.get(0).lex;
+            }else{
+                String val = this.getValor(TS, raiz.hijos.get(0).lex).toString();
+                System.out.println(val);
+                    if(val.equals("Semantic Error")){
+                        System.out.println("Error semantico, variable no encontrada");
+                    }else{
+                        System.out.println("viene un id"+ val);
+                        raiz.result = val;
+                    }
+            }
             
-            raiz.result = armarPrint((ArrayList<Object>)raiz.hijos.get(5).result);
         }
         else if(raiz.lex.equals("LC") &&  raiz.hijos.size() == 1){
              raiz.result = raiz.hijos.get(0).result;
             
         }else if(raiz.lex.equals("LC") &&  raiz.hijos.size() == 2){
-             raiz.result = raiz.hijos.get(1).result;
-            
+            try{
+                
+             raiz.result =  raiz.hijos.get(0).result.toString() + raiz.hijos.get(1).result.toString()  ;
+            }catch(Exception e){
+                raiz.result =  raiz.hijos.get(1).result;
+            }
+                
         }
         else if (raiz.lex.equals("S")){
             
              raiz.result = raiz.hijos.get(1).result;
         }
+       
     }
                 
         public String armarPrint(ArrayList<Object> listaObjetos){
@@ -181,8 +243,22 @@ public class arbol {
                  }
             }
             }
+            return msj+"\n";
+        }
+        
+        public String armarColumn(ArrayList<Object> listaObjetos, String titulo){
+            
+            String msj = "---------------------\n";
+                        msj += "       "+titulo.replace("\"", "")+"\n";
+                        msj += "---------------------\n";
+            
+            for(Object m: listaObjetos){
+              msj += m.toString() + "\n";
+            }
+            
             return msj;
         }
+        
         public Object hacerFuncion(ArrayList<Object> listaObjetos, String funcion){
             if(funcion.equalsIgnoreCase("mediana")){
             
@@ -276,6 +352,7 @@ public double calcularVarianza(ArrayList<Object> lista) {
         // Calcular la suma de los cuadrados de las diferencias entre cada elemento y la media
         double sumaCuadradosDiferencias = 0;
         for (Object valor : lista) {
+            System.out.println("valooorr"+ valor.toString());
             sumaCuadradosDiferencias += Math.pow(Double.parseDouble(valor.toString()) - media, 2);
         }
 
