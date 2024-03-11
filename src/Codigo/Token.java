@@ -8,11 +8,21 @@ public class Token {
     private String lexema;
     private String fila;
     private String columna;
+    private String tipo;
 
-    public Token(String lexema, String fila, String columna) {
+    public Token(String lexema, String fila, String columna, String tipo) {
         this.lexema = lexema;
         this.fila = fila;
         this.columna = columna;
+        this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getLexema() {

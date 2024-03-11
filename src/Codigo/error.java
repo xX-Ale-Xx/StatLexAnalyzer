@@ -9,18 +9,10 @@ package Codigo;
  * @author Javier Avila
  */
 public class error extends Token {
-    private String tipo;
     public error(String lexema, String tipo, String fila, String columna) {
-        super(lexema, fila, columna);
-        this.tipo = tipo;
+        
+        super(lexema, fila, columna, tipo);
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
     
 }

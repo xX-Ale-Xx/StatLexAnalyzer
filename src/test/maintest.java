@@ -13,10 +13,7 @@ import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
-/**
- *
- * @author Javier Avila
- */
+
 public class maintest {
     
     public static void main(String args[]){
@@ -77,7 +74,40 @@ public class maintest {
                             +"  "
                             +"console :: column = \"prueba\" -> @array2 end;"
                             +" "
-                            + "END PROGRAM;";
+                            +" graphPie(\n" +
+              "titulo::char[] = \"Titulo inicial\" end;\n" +
+"label::char[] = [\"dato incorrecto\", \"dato2\" ] end;\n" +
+"values::double = [20, 70] end;\n" +
+"titulo::char[] = \"Titulo que se debe mostrar\" end;\n" +
+"label::char[] = [\"dato correcto\", \"dato2\" ] end;\n" +
+"EXEC graphPie end;\n" +
+") end; "
+                            +" "
+                            +"graphBar(\n" +
+"titulo::char[] = \"Estudiantes\" end;\n" +
+"ejeX::char[] = [\"1 Parcial\", \"2 parcial\", \"Final\"] end;\n" +
+"ejeY::double = [50, 30, 70] end;\n" +
+"tituloX::char[] = \"Actividades\" end;\n" +
+"tituloY::char[] = \"Notas\" end;\n" +
+"EXEC graphBar end;\n" +
+") end;"
+                            +" "
+                            +"graphLine(\n" +
+"titulo::char[] = \"Gráfica de Línea\" end;\n" +
+"ejeX::char[] = [\"1 Parcial\", \"2 parcial\", \"Final\"] end;\n" +
+"ejeY::double = [50, 30, 70] end;\n" +
+"tituloX::char[] = \"Actividades\" end;\n" +
+"tituloY::char[] = \"Notas\" end;\n" +
+"EXEC graphLine end;\n" +
+") end;"
+                            +" "
+                            +" Histogram(\n" +
+"titulo::char[] = \"Analisis de Arreglo\" end;\n" +
+"values::char[] = [2,2,2,5,5,7,8] end;\n" +
+"EXEC Histogram end;\n" +
+") end;"
+                            +" "
+                            + "END PROGRAM";
                     
                     ArrayList<nodoSym> TS = new ArrayList();
                     Lexer lex = new Lexer(new StringReader(entrada));

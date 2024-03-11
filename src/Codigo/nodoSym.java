@@ -15,15 +15,36 @@ public class nodoSym {
    private String entorno;
    private String pertenece_a;
    private Object valor;
+   private String linea;
+   private String columna;
 
-    public nodoSym(String nombre, String rol, String tipo, String entorno, String pertenece_a, Object valor) {
+    public nodoSym(String nombre, String rol, String tipo, String entorno, String pertenece_a, Object valor, String linea, String columna) {
         this.nombre = nombre;
         this.rol = rol;
         this.tipo = tipo;
         this.entorno = entorno;
         this.pertenece_a = pertenece_a;
         this.valor = valor;
+        this.linea = linea;
+        this.columna = columna;
     }
+
+    public String getLinea() {
+        return linea;
+    }
+
+    public void setLinea(String linea) {
+        this.linea = linea;
+    }
+
+    public String getColumna() {
+        return columna;
+    }
+
+    public void setColumna(String columna) {
+        this.columna = columna;
+    }
+
    
     public String getNombre() {
         return nombre;

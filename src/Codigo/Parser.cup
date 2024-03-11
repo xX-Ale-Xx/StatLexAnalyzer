@@ -10,7 +10,7 @@ parser code
 
     public void syntax_error(Symbol s)
     {
-            error e = new error(String.valueOf(s.value), "Sintactico", String.valueOf(s.right), String.valueOf(s.left));
+            error e = new error("Llego un "+String.valueOf(s.value) + " no esperado", "Sintactico", String.valueOf(s.right), String.valueOf(s.left));
             Listas.setListaErrores(e);
             System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
     }
@@ -32,7 +32,7 @@ action code
 
 //------> Declaración de terminales
 terminal   PROGRAM, END, PYC, PARIZ, PARDE, COMA, OPERACION, TIPO, VAR, DOSP, ID, MENOR, GUION, ARROBA, ARR, LLIZ, LLDER, ESTADISTICO,
- CONSOLE, PRINT, IGUAL, COLUMN, MAYOR;
+ CONSOLE, PRINT, IGUAL, COLUMN, MAYOR, TIPOGRAPH, EXEC, TITULO, LABEL, VALUES,EJE;
 terminal String ENTERO, DECIMAL, CADENA;
 //------> Declaración de no terminales
 non terminal arbol S;
@@ -41,7 +41,7 @@ non terminal arbol COD;
 non terminal arbol DEC;
 non terminal arbol FUNC;
 non terminal arbol OPARIT;
-non terminal arbol VALOR;
+non terminal arbol VALOR, GRAPH, SENTENCES, DATOS;
 non terminal arbol LC, E, LVAL, DARR, LIST, IMP, IMPC, TCOLUMN, err;
 
 
@@ -52,13 +52,13 @@ start with S;
 // ------------>  Producciones  <------------
 
 
-S ::= PROGRAM:prog1 LC:lc1 END:fin PROGRAM:prog2 PYC:pcoma {:
+S ::= PROGRAM:prog1 LC:lc1 END:fin PROGRAM:prog2  {:
 arbol inicio = new arbol("S");
 inicio.addHijo(new arbol(prog1.toString()));
 inicio.addHijo(lc1);
 inicio.addHijo(new arbol(fin.toString()));
 inicio.addHijo(new arbol(prog2.toString()));
-inicio.addHijo(new arbol(pcoma.toString()));
+inicio.addHijo(new arbol(";"));
 RESULT = inicio; 
 :}
 ;
@@ -78,6 +78,7 @@ RESULT = lc;
 | DEC:dec {:
 arbol lc = new arbol("LC");
 lc.addHijo(dec);
+System.out.print("este es: "+ lc.hijos.get(0).lex );
 RESULT = lc;
 :}
 | DARR:decarr{:
@@ -97,11 +98,7 @@ arbol cod = new arbol("COD");
 cod.addHijo(op);
 RESULT = cod;
 :}
-| E:val {:
-arbol cod = new arbol("COD");
-cod.addHijo(val);
-RESULT = cod;
-:}
+
 | IMP:imp{:
 arbol cod = new arbol("COD");
 cod.addHijo(imp);
@@ -111,6 +108,11 @@ RESULT = cod;
 arbol cod = new arbol("COD");
 cod.addHijo(impc);
 RESULT = cod;
+:}
+| GRAPH:grafic{:
+arbol lc = new arbol("COD");
+lc.addHijo(grafic);
+RESULT = lc;
 :}
 | error err{:
 RESULT = new arbol(";");
@@ -122,6 +124,95 @@ err ::= VAR
 |CONSOLE
 |PYC
 ;
+
+GRAPH ::= TIPOGRAPH:tipo PARIZ:p1 SENTENCES:sent EXEC:ex TIPOGRAPH:tipo2 END:end PYC:pyc PARDE:p2 END:end2 PYC:pyc2{:
+arbol dat = new arbol("GRAPH");
+dat.addHijo(new arbol(tipo.toString()));
+dat.addHijo(new arbol(p1.toString()));
+
+dat.addHijo(sent);
+
+dat.addHijo(new arbol(ex.toString()));
+dat.addHijo(new arbol(tipo2.toString()));
+dat.addHijo(new arbol(end.toString()));
+dat.addHijo(new arbol(pyc.toString()));
+dat.addHijo(new arbol(p2.toString()));
+dat.addHijo(new arbol(end2.toString()));
+dat.addHijo(new arbol(pyc2.toString()));
+RESULT = dat;
+:}
+;
+
+SENTENCES ::= SENTENCES:sent DATOS:datos{:
+arbol dat = new arbol("SENTENCES");
+dat.addHijo(sent);
+dat.addHijo(datos);
+RESULT = dat;
+:}
+| DATOS:datos{:
+arbol dat = new arbol("SENTENCES");
+dat.addHijo(datos);
+RESULT = dat;
+:}
+;
+
+DATOS ::= TITULO:t DOSP:p1 DOSP:p2 TIPO:tip IGUAL:igu E:e END:end PYC:pyc{:
+arbol oparit = new arbol("DATOS");
+oparit.addHijo(new arbol(t.toString()));
+oparit.addHijo(new arbol(p1.toString()));
+oparit.addHijo(new arbol(p2.toString()));
+oparit.addHijo(new arbol(tip.toString()));
+oparit.addHijo(new arbol(igu.toString()));
+oparit.addHijo(e);
+oparit.addHijo(new arbol(end.toString()));
+oparit.addHijo(new arbol(pyc.toString()));
+oparit.addHijo(new arbol(String.valueOf(tleft)));
+oparit.addHijo(new arbol(String.valueOf(tright)));
+RESULT = oparit;
+:}
+| VALUES:t DOSP:p1 DOSP:p2 TIPO:tip IGUAL:igu LIST:e END:end PYC:pyc{:
+arbol oparit = new arbol("DATOS");
+oparit.addHijo(new arbol(t.toString()));
+oparit.addHijo(new arbol(p1.toString()));
+oparit.addHijo(new arbol(p2.toString()));
+oparit.addHijo(new arbol(tip.toString()));
+oparit.addHijo(new arbol(igu.toString()));
+oparit.addHijo(e);
+oparit.addHijo(new arbol(end.toString()));
+oparit.addHijo(new arbol(pyc.toString()));
+oparit.addHijo(new arbol(String.valueOf(tleft)));
+oparit.addHijo(new arbol(String.valueOf(tright)));
+RESULT = oparit;
+:}
+| LABEL:t DOSP:p1 DOSP:p2 TIPO:tip IGUAL:igu LIST:e END:end PYC:pyc{:
+arbol oparit = new arbol("DATOS");
+oparit.addHijo(new arbol(t.toString()));
+oparit.addHijo(new arbol(p1.toString()));
+oparit.addHijo(new arbol(p2.toString()));
+oparit.addHijo(new arbol(tip.toString()));
+oparit.addHijo(new arbol(igu.toString()));
+oparit.addHijo(e);
+oparit.addHijo(new arbol(end.toString()));
+oparit.addHijo(new arbol(pyc.toString()));
+oparit.addHijo(new arbol(String.valueOf(tleft)));
+oparit.addHijo(new arbol(String.valueOf(tright)));
+RESULT = oparit;
+:}
+| EJE:t DOSP:p1 DOSP:p2 TIPO:tip IGUAL:igu LIST:e END:end PYC:pyc{:
+arbol oparit = new arbol("DATOS");
+oparit.addHijo(new arbol(t.toString()));
+oparit.addHijo(new arbol(p1.toString()));
+oparit.addHijo(new arbol(p2.toString()));
+oparit.addHijo(new arbol(tip.toString()));
+oparit.addHijo(new arbol(igu.toString()));
+oparit.addHijo(e);
+oparit.addHijo(new arbol(end.toString()));
+oparit.addHijo(new arbol(pyc.toString()));
+oparit.addHijo(new arbol(String.valueOf(tleft)));
+oparit.addHijo(new arbol(String.valueOf(tright)));
+RESULT = oparit; :}
+;
+
 OPARIT ::=  OPERACION:operacion PARIZ:parentesis1 VALOR:num1 COMA:c VALOR:num2 PARDE:parentesis2 {:
 arbol oparit = new arbol("OPARIT");
 oparit.addHijo(new arbol(operacion.toString()));
@@ -154,12 +245,11 @@ RESULT = oper;
 :}
 ;
 
-DEC ::= LC:lc VAR:var DOSP:dosp1  TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion COD:cod END:end PYC:pyc {:
+DEC ::= LC:lc VAR:var DOSP:dosp1  TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion VALOR:cod END:end PYC:pyc {:
 arbol declarar = new arbol("DEC");
 declarar.addHijo(lc);
 declarar.addHijo(new arbol(var.toString()));
 declarar.addHijo(new arbol(dosp1.toString()));
-System.out.println("MIRAA"+id);
 declarar.addHijo(new arbol(tipo.toString()));
 
 declarar.addHijo(new arbol(dosp3.toString()));
@@ -171,9 +261,12 @@ declarar.addHijo(new arbol(guion.toString()));
 declarar.addHijo(cod);
 declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
+declarar.addHijo(new arbol(String.valueOf(varleft+1)));
+declarar.addHijo(new arbol(String.valueOf(varright+1)));
 RESULT = declarar;
 :}
-|VAR:var DOSP:dosp1 TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion COD:cod END:end PYC:pyc {:
+|VAR:var DOSP:dosp1 TIPO:tipo DOSP:dosp3 DOSP:dosp4 ID:id MENOR:menor GUION:guion VALOR:cod END:end PYC:pyc {:
+
 arbol declarar = new arbol("DEC");
 declarar.addHijo(new arbol(var.toString()));
 declarar.addHijo(new arbol(dosp1.toString()));
@@ -189,6 +282,8 @@ declarar.addHijo(new arbol(guion.toString()));
 declarar.addHijo(cod);
 declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
+declarar.addHijo(new arbol(String.valueOf(varleft+1)));
+declarar.addHijo(new arbol(String.valueOf(varright+1)));
 RESULT = declarar;
 :} 
 
@@ -215,9 +310,11 @@ declarar.addHijo(lval);
 declarar.addHijo(new arbol(llizquier.toString()));
 declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
+declarar.addHijo(new arbol(String.valueOf(arrleft+1)));
+declarar.addHijo(new arbol(String.valueOf(arrright+1)));
 RESULT = declarar;
 :}
-| ARR:arr DOSP:dosp1 TIPO:tipo DOSP:dosp3 DOSP:dosp4 ARROBA:arroba ID:id MENOR:menor GUION:guion LLDER:llderecha LVAL:lval LLDER:llizquier END:end PYC:pyc{:
+| ARR:arr DOSP:dosp1 TIPO:tipo DOSP:dosp3 DOSP:dosp4 ARROBA:arroba ID:id MENOR:menor GUION:guion LLDER:llderecha LVAL:lval LLIZ:llizquier END:end PYC:pyc{:
 arbol declarar = new arbol("DARR");
 declarar.addHijo(new arbol(arr.toString()));
 declarar.addHijo(new arbol(dosp1.toString()));
@@ -235,6 +332,8 @@ declarar.addHijo(lval);
 declarar.addHijo(new arbol(llizquier.toString()));
 declarar.addHijo(new arbol(end.toString()));
 declarar.addHijo(new arbol(pyc.toString()));
+declarar.addHijo(new arbol(String.valueOf(arrleft+1)));
+declarar.addHijo(new arbol(String.valueOf(arrright+1)));
 RESULT = declarar;
 :}
 

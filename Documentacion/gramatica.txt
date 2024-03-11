@@ -1,0 +1,40 @@
+
+<S> ::= "PROGRAM" <LC> "END" "PROGRAM" ";"
+
+<LC> ::= <LC> <COD>| <COD> | <DEC> | <DARR>
+
+<COD> ::= <FUNC>|<OPARIT>| <IMP>|<IMPC>| <GRAPH>| error <err>
+
+<err> ::= "VAR"|"ARR"|"CONSOLE"|";"
+
+<GRAPH> ::= "TIPOGRAPH" "(" <SENTENCES> "EXEC" "TIPOGRAPH" "END" ";" ")" "END" ";"
+
+<SENTENCES> ::= <SENTENCES> <DATOS> | <DATOS>
+
+<DATOS> ::= "TITULO" ":" ":" "TIPO" "=" <E> "END" ";" | "VALUES" ":" ":" "TIPO" "=" <LIST> "END" ";" | "LABEL" ":" ":" "TIPO" "=" <LIST> "END" ";" | "EJE" ":" ":" "TIPO" "=" <LIST> "END" ";"
+
+<OPARIT> ::=  "OPERACION" "(" <VALOR> "," <VALOR> ")"
+
+<VALOR> ::= <E> | <OPARIT> | <FUNC>
+
+
+<DEC> ::= <LC> "VAR" ":" "TIPO" ":" ":" "ID" "<" "-" <VALOR> "END" ";" |"VAR" ":" "TIPO" ":" ":" "ID" "<" "-" <VALOR> "END" ";"
+
+<DARR> ::= <LC> "ARR" ":" "TIPO" ":" ":" "@" "ID" "<" "-" "[" <LVAL> "]" "END" ";" | "ARR" ":" "TIPO" ":" ":" "@" "ID" "<" "-" "[" <LVAL> "]" "END"
+
+
+<IMP> ::= "CONSOLE" ":" ":" "PRINT" "=" <LVAL> "END" ";"
+
+<IMPC> ::= "CONSOLE" ":" ":" "COLUMN" "=" <TCOLUMN> "-" ">" <LIST> "END" ";" 
+
+<TCOLUMN> ::= "ID" | "CADENA"
+
+<LVAL> ::= <LVAL> "," <VALOR> | <VALOR>
+
+
+<FUNC> ::=  "ESTADISTICO" "(" <LIST> ")"
+
+<LIST> ::= "[" <LVAL> "]" | "@" "ID"
+
+E ::=  "ENTERO" | "DECIMAL" | "ID" | "CADENA"
+
