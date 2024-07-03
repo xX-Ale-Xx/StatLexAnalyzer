@@ -38,6 +38,6 @@
 <ul>
   <li><strong>Lenguaje de Programación:</strong> Java</li>
   <li><strong>Bibliotecas Gráficas:</strong> JFreeChart (para la generación de gráficas)</li>
-  <li><strong>Entorno de Desarrollo:</strong> Eclipse/IntelliJ IDEA</li>
+  <li><strong>Entorno de Desarrollo:</strong> Java Netbeans </li>
   <li><strong>Control de Versiones:</strong> Git</li>
 </ul>
