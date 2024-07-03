@@ -1,4 +1,4 @@
-StatLexAnalyzer
+StatLexAnalyzer <br>
 Descripción General
 StatLexAnalyzer es una herramienta avanzada desarrollada en Java que combina análisis léxico y sintáctico con capacidades estadísticas. Su objetivo principal es procesar y analizar datos no agrupados, proporcionando cálculos estadísticos detallados y generando gráficas de diversos tipos para visualizar los resultados.
 
